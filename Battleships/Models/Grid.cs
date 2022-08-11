@@ -154,7 +154,7 @@ namespace Battleships.Models {
                 Fields[coordinates.Height, coordinates.Width] = FieldTypes.sunkenShip;
 
                 if (CheckIfSunk()) {
-                    Console.WriteLine("Sunk!");
+                    Console.WriteLine("Sink!");
                 }
                 else {
                     Console.WriteLine("Hit!");
@@ -174,17 +174,7 @@ namespace Battleships.Models {
         /// </summary>
         /// <returns>Returns true if there are no ships, false otherwise.</returns>
         public bool CheckShips() {
-            int counter = 0;
-
-            for (int i = 0; i < Settings.GridHeight; i++) {
-                for (int j = 0; j < Settings.GridWidth; j++) {
-                    if (Fields[i, j] == FieldTypes.ship) {
-                        counter++;
-                    }
-                }
-            }
-
-            if (counter == 0) {
+            if (Ships.Count == 0) {
                 return true;
             }
 
