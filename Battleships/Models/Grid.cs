@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Battleships {
+namespace Battleships.Models {
     /// <summary>
     /// Represents board for the game.
     /// </summary>
@@ -13,6 +13,11 @@ namespace Battleships {
         /// Represents fields on the board.
         /// </summary>
         public FieldTypes[,] Fields { get; set; } = new FieldTypes[Settings.GridHeight, Settings.GridWidth];
+
+        /// <summary>
+        /// Represents ships on the board.
+        /// </summary>
+        public List<Ship> Ships { get; set; } = new List<Ship>();
 
         /// <summary>
         /// Initializes a new instance of the Grid class.
@@ -49,9 +54,16 @@ namespace Battleships {
                     }
 
                     if (check) {
+                        Ship ship = new Ship();
+
                         for (int i = 0; i < size; i++) {
                             Fields[height + i, width] = FieldTypes.ship;
+                            Coordinates coordinates = new Coordinates(height + i, width);
+                            ship.ShipCoordinates.Add(coordinates);
                         }
+
+                        Ships.Add(ship);
+
                         break;
                     }
                     
@@ -69,9 +81,16 @@ namespace Battleships {
                     }
 
                     if (check) {
+                        Ship ship = new Ship();
+
                         for (int i = 0; i < size; i++) {
                             Fields[height, width + i] = FieldTypes.ship;
+                            Coordinates coordinates = new Coordinates(height, width + i);
+                            ship.ShipCoordinates.Add(coordinates);
                         }
+
+                        Ships.Add(ship);
+
                         break;
                     }
                 }
@@ -124,24 +143,30 @@ namespace Battleships {
         /// Checks if the user hit the ship.
         /// </summary>
         /// <param name="coordinates">Coordinates from user.</param>
-        public void CheckCoordinates(Tuple<int, int> coordinates) {
+        public void CheckCoordinates(Coordinates coordinates) {
 
-            if (Fields[coordinates.Item1, coordinates.Item2] == FieldTypes.ocean) {
+            if (Fields[coordinates.Height, coordinates.Width] == FieldTypes.ocean) {
                 Console.WriteLine("Miss!");
-                Fields[coordinates.Item1, coordinates.Item2] = FieldTypes.miss;
+                Fields[coordinates.Height, coordinates.Width] = FieldTypes.miss;
             }
 
-            else if (Fields[coordinates.Item1, coordinates.Item2] == FieldTypes.ship) {
-                Console.WriteLine("Hit!");
-                Fields[coordinates.Item1, coordinates.Item2] = FieldTypes.sunkenShip;
+            else if (Fields[coordinates.Height, coordinates.Width] == FieldTypes.ship) {
+                Fields[coordinates.Height, coordinates.Width] = FieldTypes.sunkenShip;
+
+                if (CheckIfSunk()) {
+                    Console.WriteLine("Sunk!");
+                }
+                else {
+                    Console.WriteLine("Hit!");
+                } 
             }
 
-            else if (Fields[coordinates.Item1, coordinates.Item2] == FieldTypes.miss ||
-                     Fields[coordinates.Item1, coordinates.Item2] == FieldTypes.sunkenShip) {
+            else if (Fields[coordinates.Height, coordinates.Width] == FieldTypes.miss ||
+                     Fields[coordinates.Height, coordinates.Width] == FieldTypes.sunkenShip) {
                 Console.WriteLine("You've already hit this field.");
             }
 
-            Thread.Sleep(1500);
+            Thread.Sleep(800);
         }
 
         /// <summary>
@@ -161,6 +186,29 @@ namespace Battleships {
 
             if (counter == 0) {
                 return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if user sunk the ship.
+        /// </summary>
+        /// <returns>Returns true if user sunk a ship, false otherwise.</returns>
+        public bool CheckIfSunk() {
+            foreach (var ship in Ships) {
+                bool result = true;
+                
+                foreach(var c in ship.ShipCoordinates) {
+                    if(Fields[c.Height, c.Width] == FieldTypes.ship) {
+                        result = false;
+                    }
+                }
+
+                if (result) {
+                    Ships.Remove(ship);
+                    return true;
+                }
             }
 
             return false;

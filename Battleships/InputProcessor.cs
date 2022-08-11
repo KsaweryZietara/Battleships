@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Battleships.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -43,12 +44,12 @@ namespace Battleships {
         /// </summary>
         /// <param name="input">Input from user.</param>
         /// <returns>Returns tuple with coordinates.</returns>
-        public static Tuple<int, int> GetCoordinates(this string input) {
+        public static Coordinates GetCoordinates(this string input) {
             int width = Array.IndexOf(Settings.Letters, input[0]);
 
             int.TryParse(input.Substring(1), out int height);
 
-            return Tuple.Create(height - 1, width);
+            return new Coordinates(height - 1, width);
         }
     }
 }

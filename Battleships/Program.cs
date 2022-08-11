@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Battleships.Models;
+using System;
 using System.Threading;
 
 namespace Battleships {
@@ -25,7 +26,7 @@ namespace Battleships {
                     continue;
                 }
 
-                Tuple<int, int> coordinates = coordinatesString.GetCoordinates();
+                Coordinates coordinates = coordinatesString.GetCoordinates();
 
                 grid.CheckCoordinates(coordinates);
                 
