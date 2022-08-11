@@ -3,11 +3,16 @@
 Battleships console game created in c#.
 
 ## Running the app
-After checkout of a repository, please perform the following steps.
+To build and run app:
 
-```python
-# build
-dotnet build
+1. Go to the app folder and build:
 
-# run
-dotnet run 
+    ```console
+    dotnet build
+    ```
+
+2. Run app:
+
+    ```console
+    dotnet run
+    ```
